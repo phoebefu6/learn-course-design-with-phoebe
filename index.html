@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- social:start -->
+<meta name="description" content="Twelve sessions in two tracks: design the learning, then get it used and prove it changed something. With a transfer board that shows where a trained skill goes over 90 days, and an objective linter that reads your real text. Free, by Phoebe Fu.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Learn with Phoebe">
+<meta property="og:title" content="Learn Course Design with Phoebe">
+<meta property="og:description" content="Two tracks, twelve sessions. Design learning that changes what somebody does on Monday, and prove it.">
+<meta property="og:url" content="https://phoebefu6.github.io/learn-course-design-with-phoebe/">
+<meta property="og:image" content="https://phoebefu6.github.io/learn-course-design-with-phoebe/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Learn Course Design with Phoebe">
+<meta name="twitter:description" content="Two tracks, twelve sessions. Design it, deliver it, and prove it changed something.">
+<meta name="twitter:image" content="https://phoebefu6.github.io/learn-course-design-with-phoebe/assets/og-cover.png">
+<!-- social:end -->
+<title>Learn Course Design with Phoebe</title>
+<link rel="stylesheet" href="assets/style.css?v=2">
+<style>
+
+  .stats-row { display: flex; gap: 2.4rem; margin-top: 1.5rem; flex-wrap: wrap; }
+  .stat b { display: block; font-size: 2.1rem; font-weight: 800; line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: .72rem; opacity: .85; text-transform: uppercase; letter-spacing: .09em; font-weight: 600; }
+
+  .course-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .course-card {
+    border: 1px solid var(--hairline);
+    border-top: 4px solid var(--diff, var(--indigo));
+    border-radius: var(--radius);
+    padding: 1.2rem 1.3rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    text-decoration: none;
+    color: var(--ink);
+    background: #fff;
+    transition: box-shadow .15s ease, border-color .15s ease, transform .15s ease;
+    position: relative;
+  }
+  .course-card:hover { border-color: var(--indigo-soft); border-top-color: var(--diff, var(--indigo)); box-shadow: 0 8px 28px rgba(92,58,33,.14); transform: translateY(-3px); }
+  .course-card .cicon { font-size: 1.7rem; line-height: 1; }
+  .course-card .cnum { font-size: .72rem; font-weight: 700; color: var(--indigo); text-transform: uppercase; letter-spacing: .1em; }
+  .course-card h3 { font-size: 1.05rem; font-weight: 800; line-height: 1.3; }
+  .course-card p { font-size: .85rem; color: var(--muted); flex: 1; }
+  .course-card .meta { display: flex; gap: .4rem; flex-wrap: wrap; }
+
+  .diff-legend { display: flex; gap: 1rem; margin-top: 1.6rem; font-size: .74rem; color: var(--muted); font-weight: 600; flex-wrap: wrap; }
+  .diff-legend i { display: inline-block; width: .85rem; height: .35rem; border-radius: 999px; margin-right: .35rem; vertical-align: middle; }
+
+  .paths { margin-top: 2.6rem; }
+  .paths h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: .3rem; }
+  .paths .plede { color: var(--muted); font-size: .92rem; margin-bottom: .8rem; }
+  .path { display: flex; gap: .55rem; align-items: center; padding: .75rem 0; border-bottom: .5px solid var(--hairline); flex-wrap: wrap; }
+  .path:last-child { border-bottom: none; }
+  .path b { min-width: 15.5rem; font-size: .9rem; }
+  .path .pstep { background: var(--indigo-50); color: var(--indigo); border-radius: 999px; padding: .16rem .68rem; font-weight: 700; font-size: .8rem; text-decoration: none; transition: all .12s ease; }
+  .path .pstep:hover { background: var(--indigo); color: #fff; }
+  .path .parr { color: var(--faint); font-weight: 700; }
+
+  .mm-section { margin-top: 1.6rem; }
+  .mm-section h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: .2rem; }
+  .mm-section .mm-lede { color: var(--muted); font-size: .92rem; margin-bottom: .4rem; }
+  .mm-wrap { border: 1px solid var(--hairline); border-radius: var(--radius); background: linear-gradient(180deg,#fff,#FDFAF6); padding: .6rem; overflow-x: auto; }
+  .mm-svg { width: 100%; height: auto; display: block; max-width: 60rem; margin: 0 auto; min-width: 34rem; }
+  .mm-link { cursor: pointer; text-decoration: none; }
+  .mm-node rect { transition: opacity .15s ease, filter .15s ease; }
+  .mm-node text { pointer-events: none; }
+  .mm-link:hover .mm-node rect { filter: brightness(1.06); }
+  .mm-edge { transition: opacity .15s ease; }
+
+  .not-this { border: 1px solid var(--hairline); border-left: 4px solid var(--amber); border-radius: var(--radius); background: #fff; padding: 1.1rem 1.3rem; margin-top: 1.2rem; }
+  .not-this h3 { font-size: .95rem; font-weight: 800; margin-bottom: .5rem; }
+
+  .track-head { margin-top: 2.4rem; padding: 1rem 1.2rem; border-radius: var(--radius); background: var(--indigo-50); border-left: 4px solid var(--indigo); }
+  .track-head h2 { font-size: 1.2rem; font-weight: 800; margin-bottom: .25rem; }
+  .track-head p { font-size: .9rem; color: var(--muted); margin: 0; }
+  .track-head .tk { font-size: .7rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--indigo); }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Learn with Phoebe · Communications</div>
+    <h1>Learn <span class="accent">Course Design</span> with Phoebe</h1>
+    <p class="sub">Almost all professional training produces a room full of people who enjoyed it and a Monday in which nothing changed. This course is about that gap. Twelve sessions in two tracks: designing learning that produces a behaviour, and getting it used inside an organisation that did not ask for it. In track B a transfer board shows where a trained skill actually goes over ninety days, and the biggest lever on the whole board is not something that happens in your session at all.</p>
+    <div class="stats-row">
+      <div class="stat"><b data-count="12">12</b><span>sessions, two tracks</span></div>
+      <div class="stat"><b data-count="11">11</b><span>% still able at day 90</span></div>
+      <div class="stat"><b data-count="69">69</b><span>% if you design for it</span></div>
+      <div class="stat"><b data-count="14">14</b><span>points from one email</span></div>
+      <div class="stat"><b data-count="45">45</b><span>min per session</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="section">
+    <div class="paths" style="margin-top:0">
+      <h2>The running project ☕</h2>
+      <p class="plede"><strong>Daybreak</strong> keeps breaking its own dashboards when a producer renames a column. Somebody has decided the answer is a training session on data contracts. Across twelve sessions you find out whether it is - and if so, design one that survives contact with a Monday.</p>
+    </div>
+
+    <div class="track-head">
+      <span class="tk">Track A · six sessions</span>
+      <h2>Designer ✏️</h2>
+      <p>Design the learning. Objectives that can be failed, assessment before content, an arc that respects working memory, activities that produce the behaviour, and materials for the room you actually get.</p>
+    </div>
+    <div class="course-grid">
+      <a class="course-card" href="courses/a1-objectives.html" style="--diff:#34D399">
+        <span class="cicon">🎯</span>
+        <span class="cnum">a1 · easy</span>
+        <h3>Objectives that can be tested</h3>
+        <p>"Understand our policy" is not an objective, because nobody can fail it. Observable verbs, a condition and a criterion - checked live by a linter that reads your real text.</p>
+        <span class="meta"><span class="pill amber">▶ Start here</span></span>
+      </a>
+      <a class="course-card" href="courses/a2-backwards-design.html" style="--diff:#34D399">
+        <span class="cicon">🔄</span>
+        <span class="cnum">a2 · easy</span>
+        <h3>Backwards design</h3>
+        <p>Decide how you would know first, then choose the content that serves it. The question that deletes more slides than any other, and the not-this list applied to a curriculum.</p>
+        <span class="meta"><span class="pill">assessment first</span></span>
+      </a>
+      <a class="course-card" href="courses/a3-the-arc.html" style="--diff:#FBBF24">
+        <span class="cicon">🧊</span>
+        <span class="cnum">a3 · medium</span>
+        <h3>The arc and cognitive load</h3>
+        <p>Working memory is the binding constraint, and most bad training is a load problem wearing a motivation costume. Worked examples, fading, sequencing, segmenting.</p>
+        <span class="meta"><span class="pill">fade the scaffolding</span></span>
+      </a>
+      <a class="course-card" href="courses/a4-activities.html" style="--diff:#FBBF24">
+        <span class="cicon">🛠️</span>
+        <span class="cnum">a4 · medium</span>
+        <h3>Activities that produce the behaviour</h3>
+        <p>Practice beats exposure, retrieval beats re-reading, spacing beats cramming - including the part where the room feels harder and the results get better.</p>
+        <span class="meta"><span class="pill">harder in the room</span></span>
+      </a>
+      <a class="course-card" href="courses/a5-assessment-and-feedback.html" style="--diff:#FB923C">
+        <span class="cicon">✅</span>
+        <span class="cnum">a5 · hands-on</span>
+        <h3>Assessment and feedback</h3>
+        <p>Questions that test the objective rather than the slide, distractors built from real misconceptions, and feedback that changes the next attempt. "Incorrect" is not feedback.</p>
+        <span class="meta"><span class="pill">diagnostic wrong answers</span></span>
+      </a>
+      <a class="course-card" href="courses/a6-materials-and-the-room.html" style="--diff:#FB923C">
+        <span class="cicon">📋</span>
+        <span class="cnum">a6 · hands-on</span>
+        <h3>Materials and the room you get</h3>
+        <p>Forty minutes not sixty, a broken projector, four people on a link. The one-page job aid they keep, and materials that still work without you standing next to them.</p>
+        <span class="meta"><span class="pill">the real room</span></span>
+      </a>
+    </div>
+
+    <div class="track-head">
+      <span class="tk">Track B · six sessions</span>
+      <h2>Delivery and L&amp;D 💼</h2>
+      <p>Get it used, and prove it changed something. Needs analysis, adult motivation, running the room, transfer, measurement, and the internal sale. <strong>This track absorbed the planned corporate-training course</strong> - the source map says why.</p>
+    </div>
+    <div class="course-grid">
+      <a class="course-card" href="courses/b1-needs-analysis.html" style="--diff:#34D399">
+        <span class="cicon">🔍</span>
+        <span class="cnum">b1 · easy</span>
+        <h3>Needs analysis</h3>
+        <p>The training request is usually not a training problem. Five causes of a performance gap, only two of which are training, and the one question that saves the programme.</p>
+        <span class="meta"><span class="pill amber">▶ Start here</span></span>
+      </a>
+      <a class="course-card" href="courses/b2-adult-motivation.html" style="--diff:#34D399">
+        <span class="cicon">🔥</span>
+        <span class="cnum">b2 · easy</span>
+        <h3>Adult motivation</h3>
+        <p>Relevance, autonomy, competence - and why mandatory training reliably produces completion rather than change. Plus honouring the method they already have.</p>
+        <span class="meta"><span class="pill">why mandatory fails</span></span>
+      </a>
+      <a class="course-card" href="courses/b3-running-the-room.html" style="--diff:#FBBF24">
+        <span class="cicon">🎤</span>
+        <span class="cnum">b3 · medium</span>
+        <h3>Running the room</h3>
+        <p>The run of show, what gets cut when you are twelve minutes behind, facilitating rather than presenting, and the four difficult participants who each need a different move.</p>
+        <span class="meta"><span class="pill">the run of show</span></span>
+      </a>
+      <a class="course-card" href="courses/b4-transfer.html" style="--diff:#FBBF24">
+        <span class="cicon">📈</span>
+        <span class="cnum">b4 · medium</span>
+        <h3>Transfer</h3>
+        <p>The transfer board. Where a trained skill actually goes over ninety days, why the manager conversation beats every classroom technique, and the anti-lever every sponsor asks for.</p>
+        <span class="meta"><span class="pill amber">★ the simulator</span></span>
+      </a>
+      <a class="course-card" href="courses/b5-measuring-change.html" style="--diff:#FB923C">
+        <span class="cicon">📊</span>
+        <span class="cnum">b5 · hands-on</span>
+        <h3>Measuring behaviour change</h3>
+        <p>The four levels with their honest critique, picking the one behaviour that already has a data trail, and writing your prediction down before you run it.</p>
+        <span class="meta"><span class="pill">measure one thing</span></span>
+      </a>
+      <a class="course-card" href="courses/b6-selling-it-internally.html" style="--diff:#FB923C">
+        <span class="cicon">🤝</span>
+        <span class="cnum">b6 · hands-on</span>
+        <h3>Selling it internally</h3>
+        <p>What the sponsor is actually buying, the one-page business case, and what you must refuse to promise because you do not control it.</p>
+        <span class="meta"><span class="pill amber">🔒 the business case</span></span>
+      </a>
+    </div>
+
+    <div class="diff-legend">
+      <span><i style="background:#34D399"></i>easy - everyone</span>
+      <span><i style="background:#FBBF24"></i>medium</span>
+      <span><i style="background:#FB923C"></i>hands-on</span>
+      <span><i style="background:#F87171"></i>hardest</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="paths" style="margin-top:0">
+      <h2>Your passport 🎫</h2>
+      <p class="plede">Clear all three quiz questions in a session and it gets stamped. Twelve stamps means you can design the learning and prove it changed something. Stamps live in this browser only.</p>
+    </div>
+    <div class="pp-strip"></div>
+  </section>
+
+  <section class="section">
+    <div class="not-this">
+      <h3>What this course is not, so you land in the right place 🧭</h3>
+      <table class="clean">
+        <tr><th>If your question is</th><th>Go here instead</th></tr>
+        <tr><td>How do educators teach <em>with</em> AI without losing the learning?</td><td><span class="mono">learn-ai-education-with-phoebe</span></td></tr>
+        <tr><td>How do I say a thing so a person acts on it?</td><td><span class="mono">learn-communication-with-phoebe</span></td></tr>
+        <tr><td>How do I build a deck that carries a talk?</td><td><span class="mono">learn-ai-ppt-with-phoebe</span></td></tr>
+        <tr><td>How do I test whether the change worked, statistically?</td><td><span class="mono">learn-experimentation-with-phoebe</span></td></tr>
+        <tr><td><strong>How do I design learning that changes what somebody does on Monday, and prove it?</strong></td><td><strong>you are in the right place</strong></td></tr>
+      </table>
+      <p style="margin-top:.7rem;font-size:.86rem;color:var(--muted)">Deliberately AI-agnostic. Whether the request is even a training problem, what the objective is, what to cut, how you would know it worked - none of those are decisions a tool can make for you.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="paths">
+      <h2>Choose your path 🗺️</h2>
+      <p class="plede">Three doors into the same conviction: a course is not a body of content, it is a bet that somebody will behave differently.</p>
+      <div class="path"><b>⏱️ I have ninety minutes</b>
+        <a class="pstep" href="courses/b1-needs-analysis.html">b1</a><span class="parr">→</span>
+        <a class="pstep" href="courses/b4-transfer.html">b4</a>
+        <span style="font-size:.82rem;color:var(--muted)">is this even a training problem, and where does the skill go afterwards</span>
+      </div>
+      <div class="path"><b>✏️ I have to build something next week</b>
+        <a class="pstep" href="courses/a1-objectives.html">a1</a><span class="parr">→</span>
+        <a class="pstep" href="courses/a2-backwards-design.html">a2</a><span class="parr">→</span>
+        <a class="pstep" href="courses/a4-activities.html">a4</a><span class="parr">→</span>
+        <a class="pstep" href="courses/a6-materials-and-the-room.html">a6</a>
+        <span style="font-size:.82rem;color:var(--muted)">objective, assessment, activities, materials - the minimum honest build</span>
+      </div>
+      <div class="path"><b>💼 I own L&amp;D and nobody believes it works</b>
+        <a class="pstep" href="courses/b1-needs-analysis.html">b1</a><span class="parr">→</span>
+        <a class="pstep" href="courses/b4-transfer.html">b4</a><span class="parr">→</span>
+        <a class="pstep" href="courses/b5-measuring-change.html">b5</a><span class="parr">→</span>
+        <a class="pstep" href="courses/b6-selling-it-internally.html">b6</a>
+        <span style="font-size:.82rem;color:var(--muted)">stop taking bad requests, design for transfer, measure one thing, and sell that</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="paths" style="margin-top:0">
+      <h2>What is honest here 🧾</h2>
+      <p class="plede">One widget is a measurement and one is a model, and each says which it is on its own footer.</p>
+    </div>
+    <table class="clean">
+      <tr><th>Claim</th><th>Status</th></tr>
+      <tr><td>The objective linter</td><td><strong>Really measured.</strong> String analysis on the objective you type: non-observable verbs found by name, condition present, criterion present, short enough to test</td></tr>
+      <tr><td>The transfer board numbers</td><td><strong>A teaching model.</strong> The shape follows well-replicated findings - unpracticed material decays fast, retrieval and spacing beat re-exposure, and what happens after the room matters more than what happens in it. The digits are calibrated so the trades are visible, and they are not a measurement of your programme</td></tr>
+      <tr><td>The verb lists</td><td>Chosen, not derived. 65 observable stems, inflected automatically, and 19 non-observable ones. They exist to make you look, not to make the decision</td></tr>
+      <tr><td>The four-level evaluation model</td><td>Taught <em>with</em> its critique rather than as received wisdom</td></tr>
+      <tr><td>Daybreak and its training request</td><td>A teaching scenario. The measurement code is real; the company is not</td></tr>
+    </table>
+  </section>
+
+  <section class="section mm-section">
+    <h2>The knowledge map 🧠</h2>
+    <p class="mm-lede">The whole course at a glance - hover a session to spotlight its concepts, click any node to jump in.</p>
+    <div class="mm-wrap"><div id="mindmap"></div></div>
+  </section>
+
+  <footer class="pagefoot">
+    <span>learn-course-design-with-phoebe · by Phoebe Fu &nbsp;·&nbsp; 📚 <a href="https://phoebefu6.github.io/learn-with-phoebe/">Learn with Phoebe ↗</a></span>
+    <span>Source map, every constant, and the absorption note: <span class="mono">materials/official-course-map.md</span></span>
+  </footer>
+
+</main>
+
+<script>
+window.MINDMAP_DATA = {
+  title: "Learn\nCourse Design",
+  centerColor: "#3A2314",
+  sessions: [
+    { label: "Objectives", href: "courses/a1-objectives.html", color: "#34D399",
+      concepts: [
+        { label: "Observable verbs", href: "courses/a1-objectives.html" },
+        { label: "Condition, criterion", href: "courses/a1-objectives.html" } ] },
+    { label: "Backwards\ndesign", href: "courses/a2-backwards-design.html", color: "#34D399",
+      concepts: [
+        { label: "Assessment first", href: "courses/a2-backwards-design.html" },
+        { label: "The not-this list", href: "courses/a2-backwards-design.html" } ] },
+    { label: "The arc and\nload", href: "courses/a3-the-arc.html", color: "#FBBF24",
+      concepts: [
+        { label: "Working memory", href: "courses/a3-the-arc.html" },
+        { label: "Fade the scaffold", href: "courses/a3-the-arc.html" } ] },
+    { label: "Activities", href: "courses/a4-activities.html", color: "#FBBF24",
+      concepts: [
+        { label: "Retrieval", href: "courses/a4-activities.html" },
+        { label: "Spacing", href: "courses/a4-activities.html" } ] },
+    { label: "Assessment\nand feedback", href: "courses/a5-assessment-and-feedback.html", color: "#FB923C",
+      concepts: [
+        { label: "Test the objective", href: "courses/a5-assessment-and-feedback.html" },
+        { label: "Distractors teach", href: "courses/a5-assessment-and-feedback.html" } ] },
+    { label: "Materials and\nthe room", href: "courses/a6-materials-and-the-room.html", color: "#FB923C",
+      concepts: [
+        { label: "The job aid", href: "courses/a6-materials-and-the-room.html" },
+        { label: "The real room", href: "courses/a6-materials-and-the-room.html" } ] },
+    { label: "Needs\nanalysis", href: "courses/b1-needs-analysis.html", color: "#34D399",
+      concepts: [
+        { label: "Not a training problem", href: "courses/b1-needs-analysis.html" },
+        { label: "Five causes", href: "courses/b1-needs-analysis.html" } ] },
+    { label: "Adult\nmotivation", href: "courses/b2-adult-motivation.html", color: "#34D399",
+      concepts: [
+        { label: "Why mandatory fails", href: "courses/b2-adult-motivation.html" },
+        { label: "Start from their problem", href: "courses/b2-adult-motivation.html" } ] },
+    { label: "Running\nthe room", href: "courses/b3-running-the-room.html", color: "#FBBF24",
+      concepts: [
+        { label: "The run of show", href: "courses/b3-running-the-room.html" },
+        { label: "Four difficult people", href: "courses/b3-running-the-room.html" } ] },
+    { label: "Transfer", href: "courses/b4-transfer.html", color: "#FBBF24",
+      concepts: [
+        { label: "The manager lever", href: "courses/b4-transfer.html" },
+        { label: "The anti-lever", href: "courses/b4-transfer.html" } ] },
+    { label: "Measuring\nchange", href: "courses/b5-measuring-change.html", color: "#FB923C",
+      concepts: [
+        { label: "Four levels, critiqued", href: "courses/b5-measuring-change.html" },
+        { label: "One data trail", href: "courses/b5-measuring-change.html" } ] },
+    { label: "Selling it\ninternally", href: "courses/b6-selling-it-internally.html", color: "#FB923C",
+      concepts: [
+        { label: "What they are buying", href: "courses/b6-selling-it-internally.html" },
+        { label: "What to refuse", href: "courses/b6-selling-it-internally.html" } ] }
+  ]
+};
+</script>
+<script src="assets/mindmap.js?v=2"></script>
+<script src="assets/app.js?v=2"></script>
+</body>
+</html>
