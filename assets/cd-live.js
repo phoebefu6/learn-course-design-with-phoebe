@@ -264,7 +264,8 @@
       mk(t, "#5C3A21", 3, null);
 
       [[1, "day 1"], [30, "day 30"], [90, "day 90"]].forEach(function (p) {
-        var tx = svgEl("text", { x: x(p[0]), y: H - 8, "text-anchor": "middle" });
+        var last = p[0] === 90;
+        var tx = svgEl("text", { x: last ? W - 2 : x(p[0]), y: H - 8, "text-anchor": last ? "end" : "middle" });
         tx.setAttribute("style", "font:600 9px Inter,sans-serif;fill:#6E6055");
         tx.textContent = p[1];
         svg.appendChild(tx);
